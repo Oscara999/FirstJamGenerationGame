@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using BetweenDeathAndOblivion;
 
 public class GameManager : Singleton<GameManager>
 {
     public DialogueController dialoguesnotes;
-    public GameObject gameUI;
-    public GameObject panelWinner;
-    public GameObject panelLosse;
+    
+    public BetweenDeathAndOblivion.UIManager uiManager;
+    public TimerController timer;
     bool startGame;
     public float speed;
 
@@ -15,6 +16,7 @@ public class GameManager : Singleton<GameManager>
     {
         StartCoroutine(StartGame());
         SoundManager.Instance.PlayNewSound("MainBackGround");
+
     }
 
     public void Update()
@@ -23,24 +25,38 @@ public class GameManager : Singleton<GameManager>
 
         if (startGame)
         {
+            // si el jugador preciosa ESC y el juego no esta en pausa, pausa el juego. si el juego esta pausado
+            // y el jugador preciosa ESC, lo pausa.
+
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                uiManager.Pause();
+            }
         }
     }
 
     public void Game()
     {
-        Camera.main.transform.Rotate(Camera.main.transform.rotation.x, Camera.main.transform.rotation.y + speed, Camera.main.transform.rotation.z);
+       
     }
 
     public IEnumerator StartGame()
     {
+        
+        uiManager.mainMenuPanel.SetActive(true);
+        yield return new WaitUntil(() => !uiManager.mainMenuPanel.activeInHierarchy);
+        uiManager.globalTimePanel.SetActive(true);
+        timer.starTime = true;
         yield return new WaitForSeconds(2f);
         dialoguesnotes.StartNewDialogue(0);
-        gameUI.SetActive(true);
+        yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
+        startGame = true;
+
     }
 
     public void FinishGame()
     {
-        gameUI.SetActive(true);
+       
         //Player.Instance.IsActive = false;
 
         //if ()
@@ -55,7 +71,7 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator Winner()
     {
-        panelWinner.SetActive(true);
+        uiManager.panelWinner.SetActive(true);
         yield return new WaitForSeconds(10f);
         //Manage.Instance.isLoad = true;
         //ScenesManager.Instance.LoadLevel("MainMenu");
@@ -63,7 +79,7 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator Failed()
     {
-        panelLosse.SetActive(true);
+        uiManager.gameOverPanel.SetActive(true);
         yield return new WaitForSeconds(10f);
         //ScenesManager.Instance.isLoad = true;
         //ScenesManager.Instance.LoadLevel("MainMenu");
@@ -71,7 +87,6 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator StartMatch()
     {
-        gameUI.SetActive(true);
         yield return new WaitForSeconds(2f);
         startGame = true;
         //Player.Instance.IsActive = true;
