@@ -14,19 +14,12 @@ public class ScenesManager : Singleton<ScenesManager>
     /// </summary>
     GameObject loadingPanel;
     /// <summary>
-    /// Variable que define si el juego esta en ejecucion.
-    /// </summary>
-    [SerializeField] private bool is_pause;
-    /// <summary>
     /// Varirable que almacena el nombre de la scen principal a carga.
     /// </summary>
     [SerializeField]
     string mainLevel;
     public GameObject pausePanel;
-    /// <summary>
-    /// Propiedad que retorna el estado de ejecución (T&F). 
-    /// </summary>
-    public bool IsPaused { get { return is_pause; } }
+  
 
     void Awake()
     {
@@ -64,15 +57,6 @@ public class ScenesManager : Singleton<ScenesManager>
     {
         StartCoroutine(LoadingScreen(5f)); 
     }
-
-    /// <summary>
-    /// Método que permite salir del juego.
-    /// </summary>
-    public void Quit()
-    {
-        Application.Quit();
-    }
-    
     /// <summary>
     /// Método que permite cambiar la calidad de graficas.
     /// </summary>
@@ -88,25 +72,6 @@ public class ScenesManager : Singleton<ScenesManager>
     public void LoadErrorScene()
     {
         SceneManager.LoadScene("Error");
-    }
-
-    /// <summary>
-    /// Pausa la ejecución de la aplicación
-    /// </summary>
-    public void Pause()
-    {
-        is_pause = !is_pause;
-        SoundManager.Instance.PauseAllSounds(is_pause);
-        pausePanel.SetActive(is_pause);
-
-        if (is_pause)
-        {
-            Time.timeScale = 0.0f;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
     }
 
     /// <summary>
