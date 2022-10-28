@@ -6,14 +6,14 @@ namespace Core.Platforms
 {
     public class RotativePlatform : Platform
     {
-        [SerializeField] float _turnSpeed = 5.0f;
-        [SerializeField] float[] _randomRotationTimes= {2.4f, 3.5f};
-        private bool _canRotate = true;
-        private float _timeToRotate;
+        [SerializeField] float turnSpeed = 5.0f;
+        [SerializeField] float[] randomRotationTimes = {2.4f, 3.5f};
+        private bool canRotate = true;
+        private float timeToRotate;
         protected override void Behavior()
         {
 
-            if (_canRotate)
+            if (canRotate)
             {
                 StartCoroutine(TimeToRotate());
                
@@ -26,20 +26,20 @@ namespace Core.Platforms
 
         IEnumerator TimeToRotate()
         {
-            _canRotate = false;
-            _timeToRotate = UnityEngine.Random.Range(_randomRotationTimes[0], _randomRotationTimes[1]);
-            while(_timeToRotate > 0)
+            canRotate = false;
+            timeToRotate = UnityEngine.Random.Range(randomRotationTimes[0], randomRotationTimes[1]);
+            while(timeToRotate > 0)
             {
-                transform.Rotate(Vector3.right, _turnSpeed * Time.deltaTime, Space.Self);
+                transform.Rotate(Vector3.right, turnSpeed * Time.deltaTime, Space.Self);
 
-                _timeToRotate -= Time.deltaTime;
-                if (_timeToRotate < 1.5f)
+                timeToRotate -= Time.deltaTime;
+                if (timeToRotate < 1.5f)
                 {
                     //shake
                 }
-                yield return null;
+                yield return new WaitForSeconds(timeToRotate);
             }
-            _canRotate = true;
+            canRotate = true;
             yield return 0;
         }
 
