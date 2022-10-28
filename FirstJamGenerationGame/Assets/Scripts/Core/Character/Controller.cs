@@ -74,8 +74,7 @@ namespace Core.Character
                 actionRecorder.Record(moveAction);
                 StartCoroutine(ActionRecorder());
             }
-            // if (removeSoulPlaceholder)
-            //     soulPlaceholder.SetActive(false);
+        
             if (canRewind)
             {
                 reached = true;
