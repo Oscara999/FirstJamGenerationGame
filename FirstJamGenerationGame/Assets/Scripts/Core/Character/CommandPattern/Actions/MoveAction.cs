@@ -8,19 +8,23 @@ namespace Core.Character.Command
 
     public class MoveAction : ActionBase
     {
-        Vector3 _position;
-        float _speed;
-        public MoveAction(Player player, Vector3 position, float speed) : base(player)
+        Vector3 position;
+        float speed;
+        ActionRecorder actionRecorder;
+        public MoveAction(Player player, Vector3 position, float speed, ActionRecorder actionRecorder) : base(player)
         {
-            _position = position;
-            _speed = speed;
+            this.position = position;
+            this.speed = speed;
+            this.actionRecorder = actionRecorder;
         }
         public override void Execute()
-        {}
+        {
+            _player.PopulatePositionsList(position);
+        }
         public override void Undo()
         {
             _hasBeenVisited = true;
-            _player.SetRewind(_position, _speed);
+            _player.SetRewind(position, speed, actionRecorder);
         }
     }
 

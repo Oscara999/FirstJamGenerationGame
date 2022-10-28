@@ -9,35 +9,49 @@ namespace Core.Character
     public class Controller : MonoBehaviour
     {
         public const float TIME_TO_RECORD = 0.8f; 
-        [SerializeField] ActionRecorder _actionRecorder;
-        [SerializeField] Player _player;
-        [SerializeField] float _timeToRecord;
-        public float Speed = 15.0f;
-        public bool CanMove = true;
-        private CharacterController _characterController;
-        private Rigidbody  _rigidBody;
-        private bool _canJump = true;
-        private bool _record = true;
-        private bool _reached = true;
+
+        [SerializeField] ActionRecorder actionRecorder;
+        [SerializeField] Player player;
+        [SerializeField] float timeToRecord;
+        [SerializeField] GameObject soulPlaceholder;
+        public float speed = 15.0f;
+        public bool canMove = true;
+        private CharacterController characterController;
+        private Rigidbody  rigidBody;
+        private bool canJump = true;
+        private bool record = false;
+        private bool canRewind = false;
+        private bool canRecord = true;
+        private bool reached = false;
+        private bool removeSoulPlaceholder = false;
 
         void OnEnable()
         {
-            Player.OnPreviousReached += PreviousReached;
+            Player.onPreviousReached += PreviousReached;
         }
         void OnDisable()
         {
-            Player.OnPreviousReached -= PreviousReached;    
+            Player.onPreviousReached -= PreviousReached;    
         }
 
         private void PreviousReached(bool reached)
         {
-            _reached = reached;
+            soulPlaceholder.SetActive(false);
+            //removeSoulPlaceholder = reached;
+            actionRecorder.actions.Clear();
+            record = false;
+            reached = true;
+            canMove = true;
+            canRecord = true;
+            rigidBody.isKinematic = false;
+            rigidBody.useGravity = true;
+            return;
         }
         void Start()
         {
-            _characterController = GetComponent<CharacterController>();
-            _rigidBody = GetComponent<Rigidbody>();
-            _timeToRecord = TIME_TO_RECORD;
+            characterController = GetComponent<CharacterController>();
+            rigidBody = GetComponent<Rigidbody>();
+            timeToRecord = TIME_TO_RECORD;
         }
         void Update()
         {
@@ -45,53 +59,46 @@ namespace Core.Character
             float verticalInput = Input.GetAxisRaw("Vertical");
             Vector3 direction = new Vector3(horizontalInput, 0, verticalInput).normalized;
 
-            //transform.position += 
-            // if (direction.magnitude >= 0.1f)
-            // {
-            //     _characterController.Move(direction * speed * Time.deltaTime);
-            // }
-            
-            // if (Input.GetKeyDown(KeyCode.X))
-            // {
-            // }
-
-            if (_record)
+            if (Input.GetKeyDown(KeyCode.E)  && canRecord)
             {
-                _record = false;
-                var moveAction = new MoveAction(_player, transform.position, Speed + 5);
-                _actionRecorder.Record(moveAction);
+                soulPlaceholder.SetActive(true);
+                soulPlaceholder.transform.position = transform.position;
+                record = !record;
+                canRewind = true;
+                canRecord = false;
+            }
+            if (record)
+            {
+                record = false;
+                var moveAction = new MoveAction(player, transform.position, speed + 5, actionRecorder);
+                actionRecorder.Record(moveAction);
                 StartCoroutine(ActionRecorder());
             }
-
-            if (Input.GetKey(KeyCode.R) && _reached)
+            // if (removeSoulPlaceholder)
+            //     soulPlaceholder.SetActive(false);
+            if (canRewind)
+            {
+                reached = true;
+                canRewind = false;
+                canRecord = false;
+            }
+            if (Input.GetKeyDown(KeyCode.Q) && reached)
             {
                 StopAllCoroutines();
-                _record = false;
-                _actionRecorder.Rewind();
-                CanMove = false;
+                record = false;
+                reached = false;
+                actionRecorder.Rewind();
+                canMove = false;
+   
             }
-            if (Input.GetKeyUp(KeyCode.R))
-            {
-                _record = true;
-                _reached = false;
-                CanMove = true;
+         
+            if (canMove)
+                rigidBody.velocity = new Vector3(Mathf.Clamp(horizontalInput * speed, -speed, speed), rigidBody.velocity.y, Mathf.Clamp(verticalInput * speed, -speed, speed)); //Vector3.ClampMagnitude(_rigidBody.velocity, speed );
 
-            }
-            if (CanMove)
+            if (Input.GetButtonDown("Jump") && canJump)
             {
-                //_rigidBody.AddForce(new Vector3(horizontalInput, 0, verticalInput), ForceMode.Impulse);
-                _rigidBody.velocity = new Vector3(Mathf.Clamp(horizontalInput * Speed, -Speed, Speed), _rigidBody.velocity.y, Mathf.Clamp(verticalInput * Speed, -Speed, Speed)); //Vector3.ClampMagnitude(_rigidBody.velocity, speed );
-                //_rigidBody.velocity = Vector3.ClampMagnitude(_rigidBody.velocity, speed);
-
-            }
-                // _rigidBody.velocity = new Vector3(horizontal * speed , _rigidBody.velocity.y, vertical * speed );
-            if (Input.GetButtonDown("Jump") && _canJump)
-            {
-                _rigidBody.AddForce(new Vector3(0, 8, 0), ForceMode.Impulse);
-                //_rigidBody.velocity = new Vector3(horizontalInput * speed , _verticalSpeed, verticalInput * speed );
-                
-                _canJump = false;
-                // _characterController.Move(new Vector3(horizontal , 6 * speed, vertical )  * Time.deltaTime);
+                rigidBody.AddForce(new Vector3(0, 8, 0), ForceMode.Impulse);
+                canJump = false;
             }
 
         }
@@ -100,22 +107,25 @@ namespace Core.Character
         {
             if (other.CompareTag("Floor"))
             {
-                _canJump = true;
+                canJump = true;
             }
         }
         
         IEnumerator ActionRecorder()
         {
             
-            while(_timeToRecord >= 0)
+            while(timeToRecord >= 0)
             {
-                _timeToRecord -= Time.deltaTime;
+                timeToRecord -= Time.deltaTime;
                 yield return null;
             }
-            _timeToRecord = TIME_TO_RECORD;
-            _record = true;
+            timeToRecord = TIME_TO_RECORD;
+            record = true;
 
         }
+
+       
+
     }
 
 
