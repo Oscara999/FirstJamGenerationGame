@@ -16,7 +16,6 @@ public class GameManager : Singleton<GameManager>
     {
         StartCoroutine(StartGame());
         SoundManager.Instance.PlayNewSound("MainBackGround");
-
     }
 
     public void Update()
