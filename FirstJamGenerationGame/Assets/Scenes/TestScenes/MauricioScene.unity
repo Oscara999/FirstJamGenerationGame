@@ -236,6 +236,34 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7916168070557930546, guid: da72fb7d6a9ea5848b79bb025362e5e7, type: 3}
+      propertyPath: waypoints.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7916168070557930546, guid: da72fb7d6a9ea5848b79bb025362e5e7, type: 3}
+      propertyPath: waypoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1236979980}
+    - target: {fileID: 7916168070557930546, guid: da72fb7d6a9ea5848b79bb025362e5e7, type: 3}
+      propertyPath: waypoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 2024762532}
+    - target: {fileID: 7916168070557930546, guid: da72fb7d6a9ea5848b79bb025362e5e7, type: 3}
+      propertyPath: waypoints.Array.data[2]
+      value: 
+      objectReference: {fileID: 954396745}
+    - target: {fileID: 7916168070557930546, guid: da72fb7d6a9ea5848b79bb025362e5e7, type: 3}
+      propertyPath: waypoints.Array.data[3]
+      value: 
+      objectReference: {fileID: 1451624969}
+    - target: {fileID: 7916168070557930546, guid: da72fb7d6a9ea5848b79bb025362e5e7, type: 3}
+      propertyPath: waypoints.Array.data[4]
+      value: 
+      objectReference: {fileID: 1062330043}
+    - target: {fileID: 7916168070557930546, guid: da72fb7d6a9ea5848b79bb025362e5e7, type: 3}
+      propertyPath: waypoints.Array.data[5]
+      value: 
+      objectReference: {fileID: 838745719}
+    - target: {fileID: 7916168070557930546, guid: da72fb7d6a9ea5848b79bb025362e5e7, type: 3}
       propertyPath: _waypoints.Array.data[0]
       value: 
       objectReference: {fileID: 1236979980}
@@ -425,8 +453,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 7202104751014168087, guid: 20954ff882909e84b92ed93067ae1805, type: 3}
+      propertyPath: turnSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7202104751014168087, guid: 20954ff882909e84b92ed93067ae1805, type: 3}
       propertyPath: _turnSpeed
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7202104751014168087, guid: 20954ff882909e84b92ed93067ae1805, type: 3}
+      propertyPath: randomRotationTimes.Array.data[0]
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7202104751014168087, guid: 20954ff882909e84b92ed93067ae1805, type: 3}
+      propertyPath: randomRotationTimes.Array.data[1]
+      value: 2.6
       objectReference: {fileID: 0}
     - target: {fileID: 7916168070557930510, guid: 20954ff882909e84b92ed93067ae1805, type: 3}
       propertyPath: m_Name
@@ -534,6 +574,10 @@ PrefabInstance:
       value: PlayerConfig
       objectReference: {fileID: 0}
     - target: {fileID: 8055948540203447603, guid: 71f7ea1f45869e0419de8999a04ce95c, type: 3}
+      propertyPath: speed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8055948540203447603, guid: 71f7ea1f45869e0419de8999a04ce95c, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 814926897}
@@ -545,6 +589,10 @@ PrefabInstance:
       propertyPath: actionRecorder
       value: 
       objectReference: {fileID: 1926721237}
+    - target: {fileID: 8055948540203447604, guid: 71f7ea1f45869e0419de8999a04ce95c, type: 3}
+      propertyPath: m_Mass
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8055948540203447604, guid: 71f7ea1f45869e0419de8999a04ce95c, type: 3}
       propertyPath: m_UseGravity
       value: 1
