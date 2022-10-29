@@ -15,6 +15,8 @@ namespace Core.Character
         [SerializeField] float timeToRecord;
         [SerializeField] GameObject soulPlaceholder;
         [SerializeField] float jumpSpeed = 5.0f;
+        [SerializeField] float verticalVelocityThreshold = 2.0f;
+        [SerializeField] float gravityMultiplier = 0.4f;
         public float speed = 8.0f;
         public bool canMove = true;
         private CharacterController characterController;
@@ -24,7 +26,7 @@ namespace Core.Character
         private bool canRewind = false;
         private bool canRecord = true;
         private bool reached = false;
-        private bool removeSoulPlaceholder = false;
+        private Vector3 inputHolder;
 
         void OnEnable()
         {
@@ -76,15 +78,37 @@ namespace Core.Character
                
             if (Input.GetKeyDown(KeyCode.Q) && reached)
                 Rewind();
-         
-            if (canMove)
-                rigidBody.velocity = new Vector3(Mathf.Clamp(horizontalInput * speed, -speed, speed), rigidBody.velocity.y, Mathf.Clamp(verticalInput * speed, -speed, speed)); //Vector3.ClampMagnitude(_rigidBody.velocity, speed );
 
+            
+            inputHolder = new Vector3(horizontalInput, 0, verticalInput);
+            // if (horizontalInput != 0 || verticalInput != 0 && canJump)
+            //     moveAndJump = true;
+            // else
+            //     moveAndJump = false;
+            if (canMove)
+                rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity + inputHolder, speed );
+            //     rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity + inputHolder + new Vector3(0, rigidBody.velocity.y, 0), speed );
+           
+            // else if (!canJump && canMove)
+
+            if (horizontalInput != 0 || verticalInput != 0 && canJump)
+            {
+                if (Input.GetButtonDown("Jump") && canJump)
+                {
+                    rigidBody.AddForce(new Vector3(0, jumpSpeed * 2, 0), ForceMode.Impulse);
+                    canJump = false;
+                }
+            }
+                  
             if (Input.GetButtonDown("Jump") && canJump)
             {
                 rigidBody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
                 canJump = false;
             }
+
+            if (rigidBody.velocity.y < verticalVelocityThreshold)
+                rigidBody.velocity -= Vector3.up * gravityMultiplier;
+            
 
         }
 
@@ -112,9 +136,7 @@ namespace Core.Character
         void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Floor"))
-            {
                 canJump = true;
-            }
         }
         
         IEnumerator ActionRecorder()
