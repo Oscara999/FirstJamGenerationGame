@@ -8,12 +8,7 @@ namespace  Core.Character.Command
     public abstract class ActionBase
     {
         protected readonly Player _player;
-        protected bool _hasBeenVisited = false;
-        public bool HasBeenVisited
-        {
-            get{return _hasBeenVisited;}
-            private set{}
-        }
+        
         protected ActionBase(Player player)
         {
             _player = player;

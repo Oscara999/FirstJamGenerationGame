@@ -28,13 +28,23 @@ namespace Core.Character
             this.prevPosition = prevPosition;
             this.speed = speed;
             rigidBody.useGravity = false;
-            rigidBody.isKinematic = false;
-            onPreviousReached?.Invoke(false);
+            rigidBody.isKinematic = true;
+            // onPreviousReached?.Invoke(false);
 
         }
         public void PopulatePositionsList(Vector3 newPosition)
         {
-            positions.Insert(0, newPosition);
+            try
+            {
+                if (newPosition != positions[0])
+                    positions.Insert(0, newPosition);
+            }
+            catch(ArgumentOutOfRangeException)
+            {
+                positions.Insert(0, newPosition);
+            }
+            
+            
         }
 
         private void MoveToPrevious()
@@ -45,8 +55,8 @@ namespace Core.Character
             if (positions.Count ==  0)
             {
                 rewind = false;
-                rigidBody.useGravity = false;
-                rigidBody.isKinematic = true;
+                rigidBody.useGravity = true;
+                rigidBody.isKinematic = false;
                 onPreviousReached?.Invoke(!rewind);
                 return;
             }

@@ -18,51 +18,54 @@ namespace Core.Platforms
         {
 
             if (canRotate)
-            {
                 RotatePlatform();
-                //StartCoroutine(TimeToRotate());
-            }
-            // 
         }
 
         void RotatePlatform()
         {
-            if (transform.rotation.eulerAngles.x < 0 )
-            {
-                Debug.Log("dot");
+            if (transform.rotation.eulerAngles.x >= 180 )
                 StartCoroutine(TimeToRotate());
-            }
             else
-                transform.Rotate(Vector3.right, 180 * Time.deltaTime, Space.Self);
+                transform.Rotate(Vector3.right, 180 * turnSpeed * Time.deltaTime, Space.Self);
         }
         IEnumerator TimeToRotate()
         {
             canRotate = false;
             timeToRotate = UnityEngine.Random.Range(randomRotationTimes[0], randomRotationTimes[1]);
-           
+            transform.rotation = Quaternion.Euler(180, 0, 0);
             Vector3 originalPosition = transform.position;
-            float elapsed = 0f;
-            while (elapsed < shakingDuration)
+            float elapsed = SHAKING_SET_TIME;
+            while(timeToRotate > 0)
             {
-                Debug.Log(elapsed);
-                float x = UnityEngine.Random.Range(-0.1f, 0.1f);
-                float y = UnityEngine.Random.Range(-0.1f, 0.1f);
-                float z = UnityEngine.Random.Range(-0.1f, 0.1f);
-                transform.position = new Vector3(originalPosition.x + x, originalPosition.y + y, 
-                                    originalPosition.z + z );
-                elapsed += Time.deltaTime;
+                if (timeToRotate <= elapsed)
+                {
+
+                    while (elapsed > 0)
+                    {
+                        Shake(originalPosition);
+                        elapsed -= Time.deltaTime;
+                        timeToRotate -= Time.deltaTime;
+                        yield return 0;
+                    }
+                }
+                timeToRotate -= Time.deltaTime;
                 yield return 0;
             }
             transform.position = originalPosition;
-                //shake
-            
-            transform.Rotate(Vector3.right, 2 * Time.deltaTime, Space.Self);
-            //yield return new WaitForSeconds(timeToRotate);
-            
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+               
             canRotate = true;
             yield return 0;
         }
 
+        void Shake(Vector3 originalPosition)
+        {
+            float x = UnityEngine.Random.Range(-0.1f, 0.1f);
+            float y = UnityEngine.Random.Range(-0.1f, 0.1f);
+            float z = UnityEngine.Random.Range(-0.1f, 0.1f);
+            transform.position = new Vector3(originalPosition.x + x, originalPosition.y + y, 
+                                originalPosition.z + z );
+        }
      
 
     }
