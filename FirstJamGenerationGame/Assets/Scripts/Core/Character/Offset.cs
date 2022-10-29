@@ -9,10 +9,7 @@ namespace Core.Player
         public GameObject player;
         Vector3 offset = new Vector3(0, 0.8f, -0.7f);
         // Update is called once per frame
-        void Update()
-        {
-            transform.position = player.transform.position + offset;
-        }
+        void Update() => transform.position = player.transform.position + offset;
     }
 
 }

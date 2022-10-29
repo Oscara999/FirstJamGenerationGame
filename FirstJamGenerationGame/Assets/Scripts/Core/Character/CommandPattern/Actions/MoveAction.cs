@@ -21,11 +21,7 @@ namespace Core.Character.Command
         {
             _player.PopulatePositionsList(position);
         }
-        public override void Undo()
-        {
-            _hasBeenVisited = true;
-            _player.SetRewind(position, speed, actionRecorder);
-        }
+        public override void Undo() =>   _player.SetRewind(position, speed, actionRecorder);
     }
 
 

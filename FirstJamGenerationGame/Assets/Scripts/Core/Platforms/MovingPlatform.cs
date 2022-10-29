@@ -6,31 +6,30 @@ namespace Core.Platforms
 {
     public class MovingPlatform : Platform
     {
-        [SerializeField] private List<GameObject> _waypoints;
+        [SerializeField] private List<GameObject> waypoints;
         [SerializeField] private float moveSpeed = 4.0f;
-        [SerializeField] Transform _parent;
-        private int _currentWaypoint;
+        private int currentWaypoint;
         // Start is called before the first frame update
         private void Start()
         {
-            if (_waypoints.Count <= 0) return;
-            _currentWaypoint = 0;
+            if (waypoints.Count <= 0) return;
+            currentWaypoint = 0;
         }
 
         protected override void Behavior()
         {
         
-            transform.position = Vector3.MoveTowards(transform.position, _waypoints[_currentWaypoint].transform.position,
+            transform.position = Vector3.MoveTowards(transform.position, waypoints[currentWaypoint].transform.position,
                 (moveSpeed * Time.deltaTime));
 
-            if (Vector3.Distance(_waypoints[_currentWaypoint].transform.position, transform.position) <= 0)
+            if (Vector3.Distance(waypoints[currentWaypoint].transform.position, transform.position) <= 0)
             {
-                _currentWaypoint++;
+                currentWaypoint++;
             }
 
-            if (_currentWaypoint != _waypoints.Count) return;
-                _waypoints.Reverse();
-            _currentWaypoint = 0;
+            if (currentWaypoint != waypoints.Count) return;
+                waypoints.Reverse();
+            currentWaypoint = 0;
         }
 
 
@@ -38,10 +37,7 @@ namespace Core.Platforms
         {
             Vector3 playerScale = other.gameObject.transform.localScale;
             if (!other.CompareTag("Player")) return;
-                
-                // other.transform.SetParent(_parent);
-                other.transform.parent = transform;
-                // other.transform.localScale = new Vector3(3/transform.localScale.x, 1/transform.localScale.y,3/transform.localScale.z);
+            other.transform.parent = transform;
         }
 
         private void OnTriggerExit(Collider other)
@@ -52,7 +48,7 @@ namespace Core.Platforms
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
-            Vector3[] _segmentsArray = new Vector3[_waypoints.Count + 1];
+            Vector3[] _segmentsArray = new Vector3[waypoints.Count + 1];
             for (int i = 0; i < _segmentsArray.Length; i++)
             {
                 _segmentsArray[i] = transform.position;
@@ -71,7 +67,7 @@ namespace Core.Platforms
 
             // Gizmos.color = Color.red;
             // Gizmos.DrawLine(_enemyTransform.position - (MaxDistance / 2) * Vector3.up, _enemyTransform.position + (MaxDistance / 2) * Vector3.up );
-            DrawMovementLine(_segmentsArray[0], _waypoints);
+            DrawMovementLine(_segmentsArray[0], waypoints);
         }
 #endif
 

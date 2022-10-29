@@ -14,7 +14,8 @@ namespace Core.Character
         [SerializeField] Player player;
         [SerializeField] float timeToRecord;
         [SerializeField] GameObject soulPlaceholder;
-        public float speed = 15.0f;
+        [SerializeField] float jumpSpeed = 5.0f;
+        public float speed = 8.0f;
         public bool canMove = true;
         private CharacterController characterController;
         private Rigidbody  rigidBody;
@@ -43,8 +44,8 @@ namespace Core.Character
             reached = true;
             canMove = true;
             canRecord = true;
-            rigidBody.isKinematic = false;
-            rigidBody.useGravity = true;
+            // rigidBody.isKinematic = false;
+            // rigidBody.useGravity = false;
             return;
         }
         void Start()
@@ -68,40 +69,46 @@ namespace Core.Character
                 canRecord = false;
             }
             if (record)
-            {
-                record = false;
-                var moveAction = new MoveAction(player, transform.position, speed + 5, actionRecorder);
-                actionRecorder.Record(moveAction);
-                StartCoroutine(ActionRecorder());
-            }
+                Record();
         
             if (canRewind)
-            {
-                reached = true;
-                canRewind = false;
-                canRecord = false;
-            }
+               SetToRewind();
+               
             if (Input.GetKeyDown(KeyCode.Q) && reached)
-            {
-                StopAllCoroutines();
-                record = false;
-                reached = false;
-                actionRecorder.Rewind();
-                canMove = false;
-   
-            }
+                Rewind();
          
             if (canMove)
                 rigidBody.velocity = new Vector3(Mathf.Clamp(horizontalInput * speed, -speed, speed), rigidBody.velocity.y, Mathf.Clamp(verticalInput * speed, -speed, speed)); //Vector3.ClampMagnitude(_rigidBody.velocity, speed );
 
             if (Input.GetButtonDown("Jump") && canJump)
             {
-                rigidBody.AddForce(new Vector3(0, 8, 0), ForceMode.Impulse);
+                rigidBody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
                 canJump = false;
             }
 
         }
 
+        void Record()
+        {
+            record = false;
+            var moveAction = new MoveAction(player, transform.position, speed + 5, actionRecorder);
+            actionRecorder.Record(moveAction);
+            StartCoroutine(ActionRecorder());
+        }
+        void Rewind()
+        {
+            StopAllCoroutines();
+            record = false;
+            reached = false;
+            actionRecorder.Rewind();
+            canMove = false;
+        }
+        void SetToRewind()
+        {
+            reached = true;
+            canRewind = false;
+            canRecord = false;
+        }
         void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Floor"))
