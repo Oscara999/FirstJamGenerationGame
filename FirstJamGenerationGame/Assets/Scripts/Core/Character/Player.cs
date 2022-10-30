@@ -8,6 +8,8 @@ namespace Core.Character
 
     public class Player : MonoBehaviour
     {
+        public Controller controller;
+        public List<GameObject> particles = new List<GameObject>();
         public static Action<bool> onPreviousReached;
         public List<Vector3> positions = new List<Vector3>();
         private bool rewind = false;

@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using BetweenDeathAndOblivion;
 
 public class GameManager : Singleton<GameManager>
 {
     public DialogueController dialoguesnotes;
-    
+    public Task screenTask;
+    public Core.Character.Player playerController;
     public BetweenDeathAndOblivion.UIManager uiManager;
     public TimerController timer;
     bool startGame;
     public float speed;
-
+    public Vector3 currentStartPoint;
     void Start()
     {
+        playerController.controller.isActive = false;
         StartCoroutine(StartGame());
         SoundManager.Instance.PlayNewSound("MainBackGround");
     }
@@ -24,15 +25,108 @@ public class GameManager : Singleton<GameManager>
 
         if (startGame)
         {
-            // si el jugador preciosa ESC y el juego no esta en pausa, pausa el juego. si el juego esta pausado
-            // y el jugador preciosa ESC, lo pausa.
-
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.P) && playerController.controller.isActive)
             {
                 uiManager.Pause();
             }
         }
     }
+
+    public IEnumerator RestaureStartPosition()
+    {
+        //Fail Sound
+        SoundManager.Instance.PlayNewSound("Fail");
+
+        //borrar return Point
+        playerController.controller.Remove();
+
+        //ActivarTask
+        screenTask.ChangeSize(true);
+        yield return new WaitUntil(() => !screenTask.start);
+
+        //retornar persona
+        playerController.transform.position = currentStartPoint;
+        //DesactivarTask
+        screenTask.ChangeSize(false);
+      
+
+        yield return null;
+    }
+
+    public IEnumerator TakeLetter(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                //Desactivar
+                playerController.controller.isActive = false;
+                //borrar return Point
+                playerController.controller.Remove();
+                //pausarMusicaPrincipal
+                SoundManager.Instance.PauseAllSounds(true);
+                //sonar efecto de tomar objeto
+                SoundManager.Instance.PlayNewSound("GetItem");
+                //Cambiar Current startPoint
+                currentStartPoint = playerController.transform.position;
+                //GirarCamara
+                TurnPlayer();
+                //Activar Particulas
+
+                //sonar musica triste
+                SoundManager.Instance.PlayNewSound("Sad");
+                //Iniciar Carta
+                dialoguesnotes.StartNewDialogue(1);
+                yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
+                //parar musica triste
+                SoundManager.Instance.EndSound("Sad");
+                //despausar musica
+                SoundManager.Instance.PauseAllSounds(true);
+
+
+                //activar controlador 
+                playerController.controller.isActive = true;
+              
+                //iniciar tiempo
+                uiManager.globalTimePanel.SetActive(true);
+                timer.starTime = true;
+                break;
+
+            case 1:
+                //Cambiar Current startPoint
+                //Desactivar
+                //sonar efecto de tomar objeto
+                //Activar Particulas
+                //GirarCamara
+                //Cambiar de musica
+                //Iniciar Carta
+                //activar controlador 
+                //iniciar tiempo
+                break;
+
+            case 2:
+                //Cambiar Current startPoint
+                //Desactivar
+                //sonar efecto de tomar objeto
+                //Activar Particulas
+                //GirarCamara
+                //Cambiar de musica
+                //Iniciar Carta
+                //activar controlador 
+                //iniciar tiempo
+                break;
+
+            case 3:
+
+                break;
+        }
+
+        yield return null;
+    }
+
+    public void TurnPlayer()
+    {
+    }
+
 
     public void Game()
     {
@@ -41,31 +135,30 @@ public class GameManager : Singleton<GameManager>
 
     public IEnumerator StartGame()
     {
-        
         uiManager.mainMenuPanel.SetActive(true);
         yield return new WaitUntil(() => !uiManager.mainMenuPanel.activeInHierarchy);
+        dialoguesnotes.StartNewDialogue(0);
+
+        yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
         uiManager.globalTimePanel.SetActive(true);
         timer.starTime = true;
-        yield return new WaitForSeconds(2f);
-        dialoguesnotes.StartNewDialogue(0);
-        yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
         startGame = true;
-
+        playerController.controller.isActive = true;
+        currentStartPoint = playerController.transform.position;
     }
 
-    public void FinishGame()
+    public void FinishGame(bool state)
     {
-       
-        //Player.Instance.IsActive = false;
+        playerController.controller.isActive = false;
 
-        //if ()
-        //{
-        //    StartCoroutine(Winner());
-        //}
-        //else
-        //{
-        //    StartCoroutine(failed());
-        //}
+        if (state)
+        {
+            StartCoroutine(Winner());
+        }
+        else
+        {
+            StartCoroutine(Failed());
+        }
     }
 
     IEnumerator Winner()
@@ -84,10 +177,5 @@ public class GameManager : Singleton<GameManager>
         //ScenesManager.Instance.LoadLevel("MainMenu");
     }
 
-    IEnumerator StartMatch()
-    {
-        yield return new WaitForSeconds(2f);
-        startGame = true;
-        //Player.Instance.IsActive = true;
-    }
+
 }
