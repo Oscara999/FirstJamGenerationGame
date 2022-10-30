@@ -27,6 +27,7 @@ namespace Core.Character
         private bool canRecord = true;
         private bool reached = false;
         private Vector3 inputHolder;
+        private float speedHolder;
 
         void OnEnable()
         {
@@ -55,6 +56,7 @@ namespace Core.Character
             characterController = GetComponent<CharacterController>();
             rigidBody = GetComponent<Rigidbody>();
             timeToRecord = TIME_TO_RECORD;
+            speedHolder = speed;
         }
         void Update()
         {
@@ -69,6 +71,16 @@ namespace Core.Character
                 record = !record;
                 canRewind = true;
                 canRecord = false;
+            }
+            if ( Input.GetKeyDown(KeyCode.X) && !canRecord)
+            {
+                soulPlaceholder.SetActive(false);
+                player.positions.Clear();
+                soulPlaceholder.transform.position = transform.position;
+                record = false;
+                canRewind = false;
+                reached = false;
+                canRecord = true;
             }
             if (record)
                 Record();
@@ -86,28 +98,35 @@ namespace Core.Character
             // else
             //     moveAndJump = false;
             if (canMove)
-                rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity + inputHolder, speed );
+            {
+                rigidBody.AddForce(new Vector3(horizontalInput* speed * Time.deltaTime, 0, verticalInput * speed * Time.deltaTime), ForceMode.VelocityChange);
+                // rigidBody.velocity = Vector3.ClampMagnitude( inputHolder * speed, 6 );
+                if (Mathf.Abs(rigidBody.velocity.x) >= 6 || Mathf.Abs(rigidBody.velocity.z) >= 6)
+                    rigidBody.AddForce(new Vector3(horizontalInput*- speed * Time.deltaTime, 0, verticalInput * -speed * Time.deltaTime), ForceMode.VelocityChange);
+
+            }
             //     rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity + inputHolder + new Vector3(0, rigidBody.velocity.y, 0), speed );
            
             // else if (!canJump && canMove)
 
-            if (horizontalInput != 0 || verticalInput != 0 && canJump)
-            {
-                if (Input.GetButtonDown("Jump") && canJump)
-                {
-                    rigidBody.AddForce(new Vector3(0, jumpSpeed * 2, 0), ForceMode.Impulse);
-                    canJump = false;
-                }
-            }
+            // if (horizontalInput != 0 || verticalInput != 0 && canJump)
+            // {
+            //     if (Input.GetButtonDown("Jump") && canJump)
+            //     {
+            //         rigidBody.AddForce(new Vector3(0, jumpSpeed * 2, 0), ForceMode.Impulse);
+            //         canJump = false;
+            //     }
+            // }
                   
             if (Input.GetButtonDown("Jump") && canJump)
             {
                 rigidBody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
                 canJump = false;
             }
+            
 
-            if (rigidBody.velocity.y < verticalVelocityThreshold)
-                rigidBody.velocity -= Vector3.up * gravityMultiplier;
+            // if (rigidBody.velocity.y < verticalVelocityThreshold)
+            //     rigidBody.velocity -= Vector3.up * gravityMultiplier;
             
 
         }
@@ -136,7 +155,10 @@ namespace Core.Character
         void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Floor"))
+            {
                 canJump = true;
+                
+            }
         }
         
         IEnumerator ActionRecorder()
