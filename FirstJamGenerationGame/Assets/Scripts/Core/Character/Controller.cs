@@ -63,19 +63,28 @@ namespace Core.Character
             float horizontalInput = Input.GetAxisRaw("Horizontal");
             float verticalInput = Input.GetAxisRaw("Vertical");
             Vector3 direction = new Vector3(horizontalInput, 0, verticalInput).normalized;
-
-            if (Input.GetKeyDown(KeyCode.E)  && canRecord)
+            
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                soulPlaceholder.SetActive(true);
-                soulPlaceholder.transform.position = transform.position;
-                record = !record;
-                canRewind = true;
-                canRecord = false;
+               if (canRecord)
+               {
+                    soulPlaceholder.SetActive(true);
+                    soulPlaceholder.transform.position = transform.position;
+                    record = true;
+                    canRewind = true;
+                    canRecord = false;
+               }
+               else
+               {
+                    Remove();
+                    return;
+               }
             }
-            if ( Input.GetKeyDown(KeyCode.X) && !canRecord)
-            {
-                Remove();
-            }
+           
+            // if ( Input.GetKeyDown(KeyCode.X) && !canRecord)
+            // {
+            //     Remove();
+            // }
             if (record)
                 Record();
         
@@ -119,6 +128,7 @@ namespace Core.Character
             }
             if (!canJump)
             {
+                //canRecord = false;
                 if (Mathf.Abs(rigidBody.velocity.x) >= speed -2 )
                     rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0,0),ForceMode.VelocityChange);
                 if (Mathf.Abs(rigidBody.velocity.z) >= speed -2 )
@@ -148,17 +158,22 @@ namespace Core.Character
             reached = false;
             actionRecorder.Rewind();
         }
-        void Remove()
+        public void Remove()
         {
-            soulPlaceholder.SetActive(false);
             player.positions.Clear();
+            actionRecorder.Remove();
+            soulPlaceholder.SetActive(false);
             soulPlaceholder.transform.position = transform.position;
             
-            canRecord = true;
             StopAllCoroutines();
+            StartCoroutine(WaitForReset());
+        }
+        IEnumerator WaitForReset()
+        {
+            yield return new WaitForSeconds(0.4f);
+            canRecord = true;
             record = false;
             reached = false;
-            actionRecorder.Remove();
             canMove = true;
         }
         void SetToRewind()
@@ -172,7 +187,7 @@ namespace Core.Character
             if (other.CompareTag("Floor"))
             {
                 canJump = true;
-                
+                //canRecord = true;
             }
         }
         

@@ -20,6 +20,10 @@ public class JumpAction : ActionBase
     {
 
     }
+    public override void Clear()
+    {
+            
+    }
 }
 
 }
