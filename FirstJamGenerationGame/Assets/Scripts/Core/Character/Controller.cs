@@ -142,11 +142,11 @@ namespace Core.Character
         }
         void Rewind()
         {
+            canMove = false;
             StopAllCoroutines();
             record = false;
             reached = false;
             actionRecorder.Rewind();
-            canMove = false;
         }
         void Remove()
         {
