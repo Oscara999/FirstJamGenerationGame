@@ -1611,7 +1611,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7202104751014168087, guid: 20954ff882909e84b92ed93067ae1805, type: 3}
       propertyPath: turnSpeed
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7202104751014168087, guid: 20954ff882909e84b92ed93067ae1805, type: 3}
       propertyPath: _turnSpeed
