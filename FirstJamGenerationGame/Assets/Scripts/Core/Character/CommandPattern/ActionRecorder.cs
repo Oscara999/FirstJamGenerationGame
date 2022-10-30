@@ -24,6 +24,7 @@ namespace Core.Character.Command
         }
         public void Remove()
         {
+            if (actions.Count == 0) return;
             actions.Clear();
         }
     }

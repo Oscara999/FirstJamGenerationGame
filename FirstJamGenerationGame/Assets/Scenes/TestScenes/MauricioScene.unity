@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1803331862595623772, guid: 638ad736728686b43a434588d574982f, type: 3}
+      propertyPath: turnSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8860195489230124348, guid: 638ad736728686b43a434588d574982f, type: 3}
       propertyPath: m_Name
       value: PrototypeLevel
