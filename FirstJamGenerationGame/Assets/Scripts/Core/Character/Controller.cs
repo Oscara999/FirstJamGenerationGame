@@ -19,6 +19,7 @@ namespace Core.Character
         [SerializeField] float gravityMultiplier = 0.4f;
         public float speed = 8.0f;
         public bool canMove = true;
+        public bool isActive = true;
         private CharacterController characterController;
         private Rigidbody  rigidBody;
         private bool canJump = true;
@@ -59,7 +60,8 @@ namespace Core.Character
             speedHolder = speed;
         }
         void Update()
-        {
+        {   
+            if (!isActive) return;
             float horizontalInput = Input.GetAxisRaw("Horizontal");
             float verticalInput = Input.GetAxisRaw("Vertical");
             Vector3 direction = new Vector3(horizontalInput, 0, verticalInput).normalized;
