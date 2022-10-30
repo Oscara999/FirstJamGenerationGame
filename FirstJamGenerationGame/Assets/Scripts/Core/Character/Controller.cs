@@ -74,13 +74,7 @@ namespace Core.Character
             }
             if ( Input.GetKeyDown(KeyCode.X) && !canRecord)
             {
-                soulPlaceholder.SetActive(false);
-                player.positions.Clear();
-                soulPlaceholder.transform.position = transform.position;
-                record = false;
-                canRewind = false;
-                reached = false;
-                canRecord = true;
+                Remove();
             }
             if (record)
                 Record();
@@ -99,10 +93,10 @@ namespace Core.Character
             //     moveAndJump = false;
             if (canMove)
             {
-                rigidBody.AddForce(new Vector3(horizontalInput* speed * Time.deltaTime, 0, verticalInput * speed * Time.deltaTime), ForceMode.VelocityChange);
+                rigidBody.AddForce(new Vector3(horizontalInput* 20 * Time.deltaTime, 0, verticalInput * 20 * Time.deltaTime), ForceMode.VelocityChange);
                 // rigidBody.velocity = Vector3.ClampMagnitude( inputHolder * speed, 6 );
-                if (Mathf.Abs(rigidBody.velocity.x) >= 6 || Mathf.Abs(rigidBody.velocity.z) >= 6)
-                    rigidBody.AddForce(new Vector3(horizontalInput*- speed * Time.deltaTime, 0, verticalInput * -speed * Time.deltaTime), ForceMode.VelocityChange);
+                if (Mathf.Abs(rigidBody.velocity.x) >= speed || Mathf.Abs(rigidBody.velocity.z) >= speed)
+                    rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0, verticalInput * -20 * Time.deltaTime), ForceMode.VelocityChange);
 
             }
             //     rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity + inputHolder + new Vector3(0, rigidBody.velocity.y, 0), speed );
@@ -122,6 +116,14 @@ namespace Core.Character
             {
                 rigidBody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
                 canJump = false;
+            }
+            if (!canJump)
+            {
+                if (Mathf.Abs(rigidBody.velocity.x) >= speed -2 )
+                    rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0,0),ForceMode.VelocityChange);
+                if (Mathf.Abs(rigidBody.velocity.z) >= speed -2 )
+                    rigidBody.AddForce(new Vector3(0, 0, verticalInput * -20 * Time.deltaTime), ForceMode.VelocityChange);
+
             }
             
 
@@ -145,6 +147,19 @@ namespace Core.Character
             reached = false;
             actionRecorder.Rewind();
             canMove = false;
+        }
+        void Remove()
+        {
+            soulPlaceholder.SetActive(false);
+            player.positions.Clear();
+            soulPlaceholder.transform.position = transform.position;
+            
+            canRecord = true;
+            StopAllCoroutines();
+            record = false;
+            reached = false;
+            actionRecorder.Remove();
+            canMove = true;
         }
         void SetToRewind()
         {
