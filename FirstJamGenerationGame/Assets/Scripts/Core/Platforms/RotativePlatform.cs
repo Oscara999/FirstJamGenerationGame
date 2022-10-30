@@ -9,10 +9,8 @@ namespace Core.Platforms
         const float SHAKING_SET_TIME = 1.3f;
         [SerializeField] float turnSpeed = 5.0f;
         [SerializeField] float[] randomRotationTimes = {2.4f, 3.5f};
-        [SerializeField] float shakingMagnitude = 0.06f;
         private bool canRotate = true;
         private float timeToRotate;
-        private float shakingDuration = 1.0f;
         private int signedRotationId;
         protected override void Behavior()
         {

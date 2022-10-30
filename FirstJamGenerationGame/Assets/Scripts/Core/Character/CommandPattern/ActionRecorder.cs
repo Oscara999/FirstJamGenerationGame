@@ -22,6 +22,10 @@ namespace Core.Character.Command
             var action = actions.Pop();
             action.Undo();
         }
+        public void Remove()
+        {
+            actions.Clear();
+        }
     }
 
 }

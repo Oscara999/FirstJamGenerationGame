@@ -15,6 +15,8 @@ namespace Core.Character
         [SerializeField] float timeToRecord;
         [SerializeField] GameObject soulPlaceholder;
         [SerializeField] float jumpSpeed = 5.0f;
+        [SerializeField] float verticalVelocityThreshold = 2.0f;
+        [SerializeField] float gravityMultiplier = 0.4f;
         public float speed = 8.0f;
         public bool canMove = true;
         private CharacterController characterController;
@@ -24,7 +26,8 @@ namespace Core.Character
         private bool canRewind = false;
         private bool canRecord = true;
         private bool reached = false;
-        private bool removeSoulPlaceholder = false;
+        private Vector3 inputHolder;
+        private float speedHolder;
 
         void OnEnable()
         {
@@ -53,6 +56,7 @@ namespace Core.Character
             characterController = GetComponent<CharacterController>();
             rigidBody = GetComponent<Rigidbody>();
             timeToRecord = TIME_TO_RECORD;
+            speedHolder = speed;
         }
         void Update()
         {
@@ -68,6 +72,10 @@ namespace Core.Character
                 canRewind = true;
                 canRecord = false;
             }
+            if ( Input.GetKeyDown(KeyCode.X) && !canRecord)
+            {
+                Remove();
+            }
             if (record)
                 Record();
         
@@ -76,15 +84,52 @@ namespace Core.Character
                
             if (Input.GetKeyDown(KeyCode.Q) && reached)
                 Rewind();
-         
-            if (canMove)
-                rigidBody.velocity = new Vector3(Mathf.Clamp(horizontalInput * speed, -speed, speed), rigidBody.velocity.y, Mathf.Clamp(verticalInput * speed, -speed, speed)); //Vector3.ClampMagnitude(_rigidBody.velocity, speed );
 
+            
+            inputHolder = new Vector3(horizontalInput, 0, verticalInput);
+            // if (horizontalInput != 0 || verticalInput != 0 && canJump)
+            //     moveAndJump = true;
+            // else
+            //     moveAndJump = false;
+            if (canMove)
+            {
+                rigidBody.AddForce(new Vector3(horizontalInput* 20 * Time.deltaTime, 0, verticalInput * 20 * Time.deltaTime), ForceMode.VelocityChange);
+                // rigidBody.velocity = Vector3.ClampMagnitude( inputHolder * speed, 6 );
+                if (Mathf.Abs(rigidBody.velocity.x) >= speed || Mathf.Abs(rigidBody.velocity.z) >= speed)
+                    rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0, verticalInput * -20 * Time.deltaTime), ForceMode.VelocityChange);
+
+            }
+            //     rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity + inputHolder + new Vector3(0, rigidBody.velocity.y, 0), speed );
+           
+            // else if (!canJump && canMove)
+
+            // if (horizontalInput != 0 || verticalInput != 0 && canJump)
+            // {
+            //     if (Input.GetButtonDown("Jump") && canJump)
+            //     {
+            //         rigidBody.AddForce(new Vector3(0, jumpSpeed * 2, 0), ForceMode.Impulse);
+            //         canJump = false;
+            //     }
+            // }
+                  
             if (Input.GetButtonDown("Jump") && canJump)
             {
                 rigidBody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
                 canJump = false;
             }
+            if (!canJump)
+            {
+                if (Mathf.Abs(rigidBody.velocity.x) >= speed -2 )
+                    rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0,0),ForceMode.VelocityChange);
+                if (Mathf.Abs(rigidBody.velocity.z) >= speed -2 )
+                    rigidBody.AddForce(new Vector3(0, 0, verticalInput * -20 * Time.deltaTime), ForceMode.VelocityChange);
+
+            }
+            
+
+            // if (rigidBody.velocity.y < verticalVelocityThreshold)
+            //     rigidBody.velocity -= Vector3.up * gravityMultiplier;
+            
 
         }
 
@@ -97,11 +142,24 @@ namespace Core.Character
         }
         void Rewind()
         {
+            canMove = false;
             StopAllCoroutines();
             record = false;
             reached = false;
             actionRecorder.Rewind();
-            canMove = false;
+        }
+        void Remove()
+        {
+            soulPlaceholder.SetActive(false);
+            player.positions.Clear();
+            soulPlaceholder.transform.position = transform.position;
+            
+            canRecord = true;
+            StopAllCoroutines();
+            record = false;
+            reached = false;
+            actionRecorder.Remove();
+            canMove = true;
         }
         void SetToRewind()
         {
@@ -114,6 +172,7 @@ namespace Core.Character
             if (other.CompareTag("Floor"))
             {
                 canJump = true;
+                
             }
         }
         

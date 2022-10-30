@@ -14,6 +14,7 @@ namespace Core.Platforms
         {
             if (waypoints.Count <= 0) return;
             currentWaypoint = 0;
+           
         }
 
         protected override void Behavior()
@@ -48,6 +49,20 @@ namespace Core.Platforms
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
+            
+            try
+            {
+                if (!Application.isPlaying)
+                    if (transform.position != waypoints[0].transform.position)
+                        transform.position = waypoints[0].transform.position;
+                
+            }
+            catch (System.ArgumentOutOfRangeException)
+            {
+                Debug.LogWarning("Warning: Remember to set at least the first waypoint for the platform");
+                return;
+            }
+            
             Vector3[] _segmentsArray = new Vector3[waypoints.Count + 1];
             for (int i = 0; i < _segmentsArray.Length; i++)
             {
