@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: LetterTest
   m_EditorClassIdentifier: 
   sequences:
-  - Hola mi nimbre es oscar
-  - esto es un test
-  - saludos
+  - "God 1: So, we have a new incomer\u2026 This one has died after a long coma "
+  - "God 2: No time to say goodbye, no time for closures\u2026"
+  - 'God 3: Perhaps a challenge might be a good idea.'
+  - 'God 2: Yes, yes, a challenge.  For our amusement and to give the chance to write
+    some farewells.'
+  - "God 1: It is settled, then. The farewells in return for completing the challenges\u2026"
+  - 'God 3: Make them climb the road to heaven, but with some time against their
+    fate. '

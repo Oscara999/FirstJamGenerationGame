@@ -11,6 +11,8 @@ public class GameManager : Singleton<GameManager>
     public TimerController timer;
     bool startGame;
     public float speed;
+    // reinicializar el tiempo juego luego de ver la secuencia inicial de historia de juego y como jugar
+
 
     void Start()
     {
@@ -22,15 +24,40 @@ public class GameManager : Singleton<GameManager>
     {
         Game();
 
+        // desactiva o activa el tiempo si el juego se encuentra en diferentes estados o tipos de menu
+        if (uiManager.panelLosse.activeSelf == true || uiManager.panelWinner.activeSelf == true || uiManager.mainMenuPanel.activeSelf == true ||
+       uiManager.pausedMenuPanel.activeSelf == true || uiManager.gameOverPanel.activeSelf == true || uiManager.howToPlayPanel.activeSelf == true)
+        {
+            Time.timeScale = 0.0f;
+            uiManager.TimeGame.SetActive(false);
+        }
+        else if (uiManager.DialogueController.activeSelf == true)
+        {
+           
+            uiManager.TimeGame.SetActive(false);
+            if (uiManager.DialogueController.activeSelf == false)
+
+            timer.ToTimer(timer.seconds = 300f);
+
+        }
+        else
+        {
+
+            Time.timeScale = 1f;
+            uiManager.TimeGame.SetActive(true);
+        }
+
+
         if (startGame)
         {
-            // si el jugador preciosa ESC y el juego no esta en pausa, pausa el juego. si el juego esta pausado
-            // y el jugador preciosa ESC, lo pausa.
+            // si el jugador preciosa P y el juego no esta en pausa, pausa el juego. si el juego esta pausado
+            // y el jugador preciosa P, lo pausa.
 
             if (Input.GetKeyDown(KeyCode.P))
             {
                 uiManager.Pause();
             }
+
         }
     }
 

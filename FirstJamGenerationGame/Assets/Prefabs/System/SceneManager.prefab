@@ -51,5 +51,5 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  mainLevel: Demo
+  mainLevel: LevelOne
   pausePanel: {fileID: 0}
