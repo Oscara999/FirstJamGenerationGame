@@ -8,7 +8,8 @@ public class ReturnPoint : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.Instance.RestaureStartPosition();
+            Debug.Log("xd");
+            StartCoroutine(GameManager.Instance.RestaureStartPosition());
         }
     }
 }

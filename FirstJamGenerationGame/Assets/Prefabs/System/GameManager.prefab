@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3306732202673710792}
   - component: {fileID: 3306732202673710793}
+  - component: {fileID: 1580192680}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,6 +46,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialoguesnotes: {fileID: 0}
+  screenTask: {fileID: 1580192680}
+  playerController: {fileID: 0}
   uiManager: {fileID: 0}
   timer: {fileID: 0}
   speed: 0.4
+  currentStartPoint: {x: 0, y: 0, z: 0}
+--- !u!114 &1580192680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3306732202673710794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 707f8955cf5ae20438d23fad8a683f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 2
+  "tama\xF1o": 4
+  sprite: {fileID: 0}
+  start: 0

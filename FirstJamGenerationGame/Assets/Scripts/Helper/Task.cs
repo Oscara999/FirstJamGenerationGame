@@ -53,6 +53,7 @@ public class Task : MonoBehaviour
         }
 
         Debug.Log("The black window starts to Disminuir.");
+        sprite.enabled = false;
         start = false;
     }
 
@@ -65,6 +66,7 @@ public class Task : MonoBehaviour
         }
 
         Debug.Log("The black window starts to Grow");
+        sprite.enabled = false;
         start = false;
     }
 }

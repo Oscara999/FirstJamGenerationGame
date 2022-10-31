@@ -21,7 +21,7 @@ namespace Core.Character
         public bool canMove = true;
         public bool isActive = true;
         private CharacterController characterController;
-        private Rigidbody  rigidBody;
+        public Rigidbody  rigidBody;
         private bool canJump = true;
         private bool record = false;
         private bool canRewind = false;
@@ -61,88 +61,94 @@ namespace Core.Character
         }
         void Update()
         {   
-            if (!isActive) return;
-            float horizontalInput = Input.GetAxisRaw("Horizontal");
-            float verticalInput = Input.GetAxisRaw("Vertical");
-            Vector3 direction = new Vector3(horizontalInput, 0, verticalInput).normalized;
-            
-            if (Input.GetKeyDown(KeyCode.E))
+            if (!isActive) 
             {
-               if (canRecord)
-               {
-                    soulPlaceholder.SetActive(true);
-                    soulPlaceholder.transform.position = transform.position;
-                    record = true;
-                    canRewind = true;
-                    canRecord = false;
-               }
-               else
-               {
-                    Remove();
-                    return;
-               }
+                rigidBody.velocity = Vector3.zero;
+                return;
             }
+            else
+            {
+                float horizontalInput = Input.GetAxisRaw("Horizontal");
+                float verticalInput = Input.GetAxisRaw("Vertical");
+                Vector3 direction = new Vector3(horizontalInput, 0, verticalInput).normalized;
+            
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                   if (canRecord)
+                   {
+                        soulPlaceholder.SetActive(true);
+                        soulPlaceholder.transform.position = transform.position;
+                        record = true;
+                        canRewind = true;
+                        canRecord = false;
+                   }
+                   else
+                   {
+                        Remove();
+                        return;
+                   }
+                }
            
-            // if ( Input.GetKeyDown(KeyCode.X) && !canRecord)
-            // {
-            //     Remove();
-            // }
-            if (record)
-                Record();
+                // if ( Input.GetKeyDown(KeyCode.X) && !canRecord)
+                // {
+                //     Remove();
+                // }
+                if (record)
+                    Record();
         
-            if (canRewind)
-               SetToRewind();
+                if (canRewind)
+                   SetToRewind();
                
-            if (Input.GetKeyDown(KeyCode.Q) && reached)
-                Rewind();
+                if (Input.GetKeyDown(KeyCode.Q) && reached)
+                    Rewind();
 
             
-            inputHolder = new Vector3(horizontalInput, 0, verticalInput);
-            // if (horizontalInput != 0 || verticalInput != 0 && canJump)
-            //     moveAndJump = true;
-            // else
-            //     moveAndJump = false;
-            if (canMove)
-            {
-                rigidBody.AddForce(new Vector3(horizontalInput* 20 * Time.deltaTime, 0, verticalInput * 20 * Time.deltaTime), ForceMode.VelocityChange);
-                // rigidBody.velocity = Vector3.ClampMagnitude( inputHolder * speed, 6 );
-                if (Mathf.Abs(rigidBody.velocity.x) >= speed || Mathf.Abs(rigidBody.velocity.z) >= speed)
-                    rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0, verticalInput * -20 * Time.deltaTime), ForceMode.VelocityChange);
+                inputHolder = new Vector3(horizontalInput, 0, verticalInput);
+                // if (horizontalInput != 0 || verticalInput != 0 && canJump)
+                //     moveAndJump = true;
+                // else
+                //     moveAndJump = false;
+                if (canMove)
+                {
+                    rigidBody.AddForce(new Vector3(horizontalInput* 20 * Time.deltaTime, 0, verticalInput * 20 * Time.deltaTime), ForceMode.VelocityChange);
+                    // rigidBody.velocity = Vector3.ClampMagnitude( inputHolder * speed, 6 );
+                    if (Mathf.Abs(rigidBody.velocity.x) >= speed || Mathf.Abs(rigidBody.velocity.z) >= speed)
+                        rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0, verticalInput * -20 * Time.deltaTime), ForceMode.VelocityChange);
 
-            }
-            //     rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity + inputHolder + new Vector3(0, rigidBody.velocity.y, 0), speed );
+                }
+                //     rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity + inputHolder + new Vector3(0, rigidBody.velocity.y, 0), speed );
            
-            // else if (!canJump && canMove)
+                // else if (!canJump && canMove)
 
-            // if (horizontalInput != 0 || verticalInput != 0 && canJump)
-            // {
-            //     if (Input.GetButtonDown("Jump") && canJump)
-            //     {
-            //         rigidBody.AddForce(new Vector3(0, jumpSpeed * 2, 0), ForceMode.Impulse);
-            //         canJump = false;
-            //     }
-            // }
+                // if (horizontalInput != 0 || verticalInput != 0 && canJump)
+                // {
+                //     if (Input.GetButtonDown("Jump") && canJump)
+                //     {
+                //         rigidBody.AddForce(new Vector3(0, jumpSpeed * 2, 0), ForceMode.Impulse);
+                //         canJump = false;
+                //     }
+                // }
                   
-            if (Input.GetButtonDown("Jump") && canJump)
-            {
-                rigidBody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
-                canJump = false;
-            }
-            if (!canJump)
-            {
-                //canRecord = false;
-                if (Mathf.Abs(rigidBody.velocity.x) >= speed -2 )
-                    rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0,0),ForceMode.VelocityChange);
-                if (Mathf.Abs(rigidBody.velocity.z) >= speed -2 )
-                    rigidBody.AddForce(new Vector3(0, 0, verticalInput * -20 * Time.deltaTime), ForceMode.VelocityChange);
+                if (Input.GetButtonDown("Jump") && canJump)
+                {
+                    rigidBody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
+                    canJump = false;
+                }
+                if (!canJump)
+                {
+                    //canRecord = false;
+                    if (Mathf.Abs(rigidBody.velocity.x) >= speed -2 )
+                        rigidBody.AddForce(new Vector3(horizontalInput*- 20 * Time.deltaTime, 0,0),ForceMode.VelocityChange);
+                    if (Mathf.Abs(rigidBody.velocity.z) >= speed -2 )
+                        rigidBody.AddForce(new Vector3(0, 0, verticalInput * -20 * Time.deltaTime), ForceMode.VelocityChange);
+
+                }
+
+
+                // if (rigidBody.velocity.y < verticalVelocityThreshold)
+                //     rigidBody.velocity -= Vector3.up * gravityMultiplier;
 
             }
-            
-
-            // if (rigidBody.velocity.y < verticalVelocityThreshold)
-            //     rigidBody.velocity -= Vector3.up * gravityMultiplier;
-            
-
         }
 
         void Record()

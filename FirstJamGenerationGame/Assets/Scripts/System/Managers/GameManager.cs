@@ -34,9 +34,10 @@ public class GameManager : Singleton<GameManager>
 
     public IEnumerator RestaureStartPosition()
     {
+        playerController.controller.isActive = false;
+        //playerController.controller.canMove = false;
         //Fail Sound
         SoundManager.Instance.PlayNewSound("Fail");
-
         //borrar return Point
         playerController.controller.Remove();
 
@@ -48,47 +49,48 @@ public class GameManager : Singleton<GameManager>
         playerController.transform.position = currentStartPoint;
         //DesactivarTask
         screenTask.ChangeSize(false);
-      
+        playerController.controller.isActive = true;
+        playerController.controller.canMove = true;
+
 
         yield return null;
     }
 
     public IEnumerator TakeLetter(int index)
     {
+        //Activar Particulas
+        playerController.particles[2].SetActive(true);
+        //borrar return Point
+        playerController.controller.Remove();
+
+        //Desactivar
+        playerController.controller.canMove = false;
+        //playerController.controller.isActive = false;
+        //pausarMusicaPrincipal
+        SoundManager.Instance.PauseAllSounds(true);
+        //sonar efecto de tomar objeto
+        SoundManager.Instance.PlayNewSound("GetItem");
+        //Cambiar Current startPoint
+        currentStartPoint = playerController.transform.position;
+        playerController.particles[2].SetActive(false);
+        //sonar musica triste
+        SoundManager.Instance.PlayNewSound("Sad");
+        //Iniciar Carta
+
+
         switch (index)
         {
             case 0:
-                //Desactivar
-                playerController.controller.isActive = false;
-                //borrar return Point
-                playerController.controller.Remove();
-                //pausarMusicaPrincipal
-                SoundManager.Instance.PauseAllSounds(true);
-                //sonar efecto de tomar objeto
-                SoundManager.Instance.PlayNewSound("GetItem");
-                //Cambiar Current startPoint
-                currentStartPoint = playerController.transform.position;
-                //GirarCamara
-                TurnPlayer();
-                //Activar Particulas
-
-                //sonar musica triste
-                SoundManager.Instance.PlayNewSound("Sad");
-                //Iniciar Carta
                 dialoguesnotes.StartNewDialogue(1);
                 yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
                 //parar musica triste
                 SoundManager.Instance.EndSound("Sad");
                 //despausar musica
                 SoundManager.Instance.PauseAllSounds(true);
-
-
                 //activar controlador 
                 playerController.controller.isActive = true;
-              
                 //iniciar tiempo
                 uiManager.globalTimePanel.SetActive(true);
-                timer.starTime = true;
                 break;
 
             case 1:
@@ -122,11 +124,6 @@ public class GameManager : Singleton<GameManager>
 
         yield return null;
     }
-
-    public void TurnPlayer()
-    {
-    }
-
 
     public void Game()
     {

@@ -15,7 +15,7 @@ namespace Core.Character
         private bool rewind = false;
         private Vector3 prevPosition;
         private float speed;
-        private Rigidbody rigidBody;
+        public Rigidbody rigidBody;
         private int currentWaypoint;
 
         void Start()
@@ -38,7 +38,7 @@ namespace Core.Character
         {
             try
             {
-                if (newPosition != positions[0])
+                if (Vector3.Distance(newPosition,positions[0]) > 3)
                     positions.Insert(0, newPosition);
             }
             catch(ArgumentOutOfRangeException)
