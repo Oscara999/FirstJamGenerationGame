@@ -11,12 +11,15 @@ namespace BetweenDeathAndOblivion
         public GameObject panelWinner;
         public GameObject panelLosse;
 
+        private TimerController timer = new TimerController();
+        
 
-        [SerializeField] public GameObject  mainMenuPanel, pausedMenuPanel, gameOverPanel, globalTimePanel;
-      
+
+        [SerializeField] public GameObject mainMenuPanel, pausedMenuPanel, gameOverPanel, globalTimePanel, howToPlayPanel, sheetCounterPanel, TimeGame, DialogueController;
 
 
-       public bool isPause;
+
+        public bool isPause;
 
         public void Start()
         {
@@ -41,7 +44,7 @@ namespace BetweenDeathAndOblivion
                 Time.timeScale = 1;
             }
         }
-
+        
         /// <summary>
         /// Método que permite salir del juego.
         /// </summary>

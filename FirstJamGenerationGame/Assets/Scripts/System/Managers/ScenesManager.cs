@@ -81,9 +81,10 @@ public class ScenesManager : Singleton<ScenesManager>
     /// <param name="ao">Asyncronous Operation object</param>
     IEnumerator LoadingScreen(float time)
     {
-        loadingPanel.SetActive(true);
-        yield return new WaitForSeconds(5f);
+        GameManager.Instance.screenTask.ChangeSize(true);
+        yield return new WaitUntil(() => !GameManager.Instance.screenTask.start);
         SoundManager.Instance.DeleteSoundsLevel();
-        SceneManager.LoadScene("Demo");
+        SceneManager.LoadScene("Game");
+        yield return new WaitUntil(()=> !GameManager.Instance.screenTask.start);
     }
 }

@@ -21,8 +21,6 @@ public class GameManager : Singleton<GameManager>
 
     public void Update()
     {
-        Game();
-
         if (startGame)
         {
             if (Input.GetKeyDown(KeyCode.P) && playerController.controller.isActive)
@@ -35,108 +33,107 @@ public class GameManager : Singleton<GameManager>
     public IEnumerator RestaureStartPosition()
     {
         playerController.controller.isActive = false;
-        //playerController.controller.canMove = false;
-        //Fail Sound
+        playerController.controller.canMove = false;
+
+        //Activar Particulas
+        playerController.particles[1].SetActive(true);
         SoundManager.Instance.PlayNewSound("Fail");
-        //borrar return Point
-        playerController.controller.Remove();
+        yield return new WaitForSeconds(1f);
+        playerController.particles[1].SetActive(false);
+
+        //Fail Sound
+        
 
         //ActivarTask
         screenTask.ChangeSize(true);
         yield return new WaitUntil(() => !screenTask.start);
-
+        screenTask.RestartSize(false);
         //retornar persona
         playerController.transform.position = currentStartPoint;
         //DesactivarTask
-        screenTask.ChangeSize(false);
+
         playerController.controller.isActive = true;
         playerController.controller.canMove = true;
-
-
+        //borrar return Point
+        playerController.controller.Remove();
         yield return null;
     }
 
-    public IEnumerator TakeLetter(int index)
+    public IEnumerator TakeLetter(int index, GameObject letter)
     {
-        //Activar Particulas
-        playerController.particles[2].SetActive(true);
-        //borrar return Point
+        //Pause Time
+        uiManager.globalTimePanel.SetActive(false);
+        timer.starTime = false;
         playerController.controller.Remove();
 
-        //Desactivar
-        playerController.controller.canMove = false;
-        //playerController.controller.isActive = false;
         //pausarMusicaPrincipal
         SoundManager.Instance.PauseAllSounds(true);
+
         //sonar efecto de tomar objeto
         SoundManager.Instance.PlayNewSound("GetItem");
+
+
+        //sonar musica triste
+        SoundManager.Instance.PlayNewSound("SadBackGround");
+
+        playerController.controller.isActive = false;
+        
+        //Activar Particulas
+        playerController.particles[0].SetActive(true);
+        yield return new WaitForSeconds(7f);
+        playerController.particles[0].SetActive(false);
+
         //Cambiar Current startPoint
         currentStartPoint = playerController.transform.position;
-        playerController.particles[2].SetActive(false);
-        //sonar musica triste
-        SoundManager.Instance.PlayNewSound("Sad");
+
+        
         //Iniciar Carta
-
-
         switch (index)
         {
-            case 0:
+            case 1:
                 dialoguesnotes.StartNewDialogue(1);
                 yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
-                //parar musica triste
-                SoundManager.Instance.EndSound("Sad");
-                //despausar musica
-                SoundManager.Instance.PauseAllSounds(true);
-                //activar controlador 
-                playerController.controller.isActive = true;
-                //iniciar tiempo
-                uiManager.globalTimePanel.SetActive(true);
-                break;
-
-            case 1:
-                //Cambiar Current startPoint
-                //Desactivar
-                //sonar efecto de tomar objeto
-                //Activar Particulas
-                //GirarCamara
-                //Cambiar de musica
-                //Iniciar Carta
-                //activar controlador 
-                //iniciar tiempo
                 break;
 
             case 2:
-                //Cambiar Current startPoint
-                //Desactivar
-                //sonar efecto de tomar objeto
-                //Activar Particulas
-                //GirarCamara
-                //Cambiar de musica
-                //Iniciar Carta
-                //activar controlador 
-                //iniciar tiempo
+                dialoguesnotes.StartNewDialogue(2);
+                yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
                 break;
 
             case 3:
+                dialoguesnotes.StartNewDialogue(3);
+                yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
+                break;
 
+            case 4:
+                dialoguesnotes.StartNewDialogue(4);
+                yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
                 break;
         }
 
-        yield return null;
-    }
-
-    public void Game()
-    {
-       
+        SoundManager.Instance.EndSound("SadBackGround");
+        //despausar musica
+        SoundManager.Instance.PauseAllSounds(false);
+        //activar controlador 
+        playerController.controller.isActive = true;
+        //iniciar tiempo
+        uiManager.globalTimePanel.SetActive(true);
+        timer.starTime = true;
+        //borrar return Point
+        letter.SetActive(false);
     }
 
     public IEnumerator StartGame()
     {
         uiManager.mainMenuPanel.SetActive(true);
         yield return new WaitUntil(() => !uiManager.mainMenuPanel.activeInHierarchy);
-        dialoguesnotes.StartNewDialogue(0);
 
+        dialoguesnotes.StartNewDialogue(0);
         yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
+
+        uiManager.howToPlayPanel.SetActive(true);
+        yield return new WaitUntil(() => !uiManager.howToPlayPanel.activeInHierarchy);
+
         uiManager.globalTimePanel.SetActive(true);
         timer.starTime = true;
         startGame = true;
@@ -160,19 +157,24 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator Winner()
     {
+        playerController.controller.isActive = false;
+        SoundManager.Instance.PauseAllSounds(true);
+        SoundManager.Instance.PlayNewSound("Winner");
+        uiManager.globalTimePanel.SetActive(false);
+        timer.starTime = false;
         uiManager.panelWinner.SetActive(true);
-        yield return new WaitForSeconds(10f);
-        //Manage.Instance.isLoad = true;
-        //ScenesManager.Instance.LoadLevel("MainMenu");
+        dialoguesnotes.StartNewDialogue(3);
+        yield return new WaitUntil(() => !dialoguesnotes.inPlaying);
+        ScenesManager.Instance.ReLoadLevel();
     }
 
     IEnumerator Failed()
     {
-        uiManager.gameOverPanel.SetActive(true);
+        playerController.controller.isActive = false;
+        SoundManager.Instance.PauseAllSounds(true);
+        SoundManager.Instance.PlayNewSound("Losser");
+        uiManager.panelLosse.SetActive(true);
+        uiManager.globalTimePanel.SetActive(false);
         yield return new WaitForSeconds(10f);
-        //ScenesManager.Instance.isLoad = true;
-        //ScenesManager.Instance.LoadLevel("MainMenu");
     }
-
-
 }

@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: faa0e4cbcb0016b40ac1b12320cb53db, type: 3}
-  m_Name: LetterTest
+  m_Name: End
   m_EditorClassIdentifier: 
   sequences:
-  - Hola mi nimbre es oscar
-  - esto es un test
-  - saludos
+  - "Thanks for helping our player to write those letters by playing our game, we
+    hope you enjoyed this experience! \r\n\n"
+  - "A game made by:\r\n\nOscar Alarc\xF3n - https://oscaralarcon99.itch.io/\r\nJuli\xE1n
+    Arango -  https://kwhgames.itch.io/\r\nMauricio Camargo - https://maucamsan.itch.io/\r\n"

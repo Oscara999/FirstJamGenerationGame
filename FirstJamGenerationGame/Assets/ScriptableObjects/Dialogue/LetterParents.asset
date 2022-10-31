@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faa0e4cbcb0016b40ac1b12320cb53db, type: 3}
+  m_Name: LetterParents
+  m_EditorClassIdentifier: 
+  sequences:
+  - To My Parents
+  - 'You gave me this beautiful life, and moreover, you gave me all your time. '
+  - 'You gave me your night when mine were sleepless. '
+  - 'You gave your warm, your love, and your advice. '
+  - 'I know that losing a son or a daughter is the greatest pain a parent can feel. '
+  - 'You gave your warm, your love, and your advice. '
+  - "But I don\u2019t want you to suffer. You raised me with all what you got, and
+    I got the chance to pass this knowledge to my own children\u2026"
+  - "You believed in me when I didn\u2019t and support me in everything I wanted
+    to pursue. "
+  - 'I was the luckiest person in the world because I had you as my parents. '
+  - Now that I will rest, I want you to live your lives to the fullest.
+  - You only deserve the best in this life.

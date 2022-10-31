@@ -9,8 +9,8 @@ public class Item : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            StartCoroutine(GameManager.Instance.TakeLetter(index));
-            Destroy(this);
+            gameObject.GetComponent<BoxCollider>().enabled = false;
+            StartCoroutine(GameManager.Instance.TakeLetter(index, this.gameObject));
         }
     }
 }

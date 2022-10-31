@@ -131,6 +131,7 @@ namespace Core.Character
                   
                 if (Input.GetButtonDown("Jump") && canJump)
                 {
+                    SoundManager.Instance.PlayNewSound("Jump");
                     rigidBody.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);
                     canJump = false;
                 }

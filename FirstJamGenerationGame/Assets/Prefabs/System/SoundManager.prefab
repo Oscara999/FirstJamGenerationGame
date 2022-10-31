@@ -48,3 +48,9 @@ MonoBehaviour:
   currentVolumen: 0
   songs:
   - {fileID: 11400000, guid: 6574f249ead6fb84184c21a31d174ff6, type: 2}
+  - {fileID: 11400000, guid: 8602d1c5376d2c445ad2a6f764208056, type: 2}
+  - {fileID: 11400000, guid: 94aa8c2fbe01c604b9188cac5276e218, type: 2}
+  - {fileID: 11400000, guid: b452a4c346f64e64288489afc59867b7, type: 2}
+  - {fileID: 11400000, guid: ec2bee08485fdfb49a372e91e2b2a24f, type: 2}
+  - {fileID: 11400000, guid: 4ed15460f8d09044a9cb5476aa497db3, type: 2}
+  - {fileID: 11400000, guid: fb848668e7588af4d8dd8fd1bca1e865, type: 2}

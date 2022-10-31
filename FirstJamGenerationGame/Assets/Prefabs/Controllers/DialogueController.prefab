@@ -46,6 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogues:
   - {fileID: 11400000, guid: 0a3c8a88fe62ec54fafd7b51c54f2e2d, type: 2}
+  - {fileID: 11400000, guid: 8a417d88558d55640b49202ee6c86829, type: 2}
+  - {fileID: 11400000, guid: 8129d2e65a79e524784100025b15b204, type: 2}
+  - {fileID: 11400000, guid: e2a7e19fd98d3cc48afaced16093f584, type: 2}
   inPlaying: 0
   panelDialogue: {fileID: 0}
   textBox: {fileID: 0}
